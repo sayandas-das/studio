@@ -2,7 +2,7 @@ import Image from "next/image"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import type { Student } from "@/types/student"
-import { BookOpen, Calendar, GraduationCap as GPAIcon } from "lucide-react"
+import { BookOpen } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface StudentCardProps {
@@ -26,14 +26,6 @@ export function StudentCard({ student }: StudentCardProps) {
           <BookOpen className="h-4 w-4" />
           <span className="text-foreground">{student.major}</span>
         </div>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Calendar className="h-4 w-4" />
-          <span className="text-foreground">Year {student.year}</span>
-        </div>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <GPAIcon className="h-4 w-4" />
-          <span className="text-foreground">GPA: {student.gpa.toFixed(2)}</span>
-        </div>
       </CardContent>
     </Card>
   )
@@ -51,8 +43,6 @@ export function StudentCardSkeleton() {
       </CardHeader>
       <CardContent className="grid gap-3 flex-1">
         <Skeleton className="h-5 w-5/6 rounded-md" />
-        <Skeleton className="h-5 w-1/3 rounded-md" />
-        <Skeleton className="h-5 w-1/2 rounded-md" />
       </CardContent>
     </Card>
   )
