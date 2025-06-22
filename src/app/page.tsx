@@ -1,17 +1,24 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { getStudents } from "@/lib/firebase"
+import { getStudents, addStudent } from "@/lib/firebase"
 import type { Student } from "@/types/student"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { StudentCard, StudentCardSkeleton } from "@/components/student-card"
 import { Icons } from "@/components/icons"
 import { Search } from 'lucide-react'
+import { useToast } from "@/hooks/use-toast"
+import { Separator } from "@/components/ui/separator"
 
 export default function Home() {
   const [students, setStudents] = useState<Student[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
+  const [newName, setNewName] = useState("")
+  const [newMajor, setNewMajor] = useState("")
+  const [isAdding, setIsAdding] = useState(false)
+  const { toast } = useToast()
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -21,12 +28,17 @@ export default function Home() {
         setStudents(studentData)
       } catch (error) {
         console.error("Failed to fetch students:", error)
+        toast({
+            title: "Error",
+            description: "Failed to fetch students.",
+            variant: "destructive"
+        })
       } finally {
         setLoading(false)
       }
     }
     fetchStudents()
-  }, [])
+  }, [toast])
 
   const filteredStudents = useMemo(() => {
     return students
@@ -35,6 +47,39 @@ export default function Home() {
         student.id.toLowerCase().includes(searchQuery.toLowerCase())
       )
   }, [students, searchQuery])
+
+  const handleAddStudent = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!newName.trim() || !newMajor.trim()) {
+        toast({
+            title: "Missing Information",
+            description: "Please provide both a name and a major for the student.",
+            variant: "destructive"
+        })
+        return
+    }
+
+    setIsAdding(true)
+    try {
+        const newStudent = await addStudent({ name: newName, major: newMajor })
+        setStudents(prevStudents => [newStudent, ...prevStudents].sort((a,b) => a.name.localeCompare(b.name)))
+        setNewName("")
+        setNewMajor("")
+        toast({
+            title: "Success!",
+            description: `Student "${newName}" was added successfully.`
+        })
+    } catch (error) {
+        console.error("Failed to add student:", error)
+        toast({
+            title: "Error",
+            description: "Could not add student. Please try again.",
+            variant: "destructive"
+        })
+    } finally {
+        setIsAdding(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -47,17 +92,44 @@ export default function Home() {
 
       <main className="container py-8">
         <div className="mb-8 p-4 border rounded-lg bg-card shadow-sm sticky top-16 z-10">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search by name or ID..."
-              className="pl-10 h-10 w-full"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              aria-label="Search students"
-            />
-          </div>
+            <div className="space-y-4">
+                <form onSubmit={handleAddStudent} className="space-y-4">
+                    <h2 className="text-lg font-medium">Add New Student</h2>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <Input
+                            placeholder="Student Name"
+                            value={newName}
+                            onChange={(e) => setNewName(e.target.value)}
+                            disabled={isAdding}
+                            className="flex-1"
+                            aria-label="New student name"
+                        />
+                        <Input
+                            placeholder="Major"
+                            value={newMajor}
+                            onChange={(e) => setNewMajor(e.target.value)}
+                            disabled={isAdding}
+                            className="flex-1"
+                            aria-label="New student major"
+                        />
+                        <Button type="submit" disabled={isAdding}>
+                            {isAdding ? 'Adding...' : 'Add Student'}
+                        </Button>
+                    </div>
+                </form>
+                <Separator />
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      type="search"
+                      placeholder="Search by name or ID..."
+                      className="pl-10 h-10 w-full"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                      aria-label="Search students"
+                    />
+                </div>
+            </div>
         </div>
         
         {loading ? (

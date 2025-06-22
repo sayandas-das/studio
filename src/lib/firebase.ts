@@ -1,5 +1,5 @@
 import { initializeApp, type FirebaseOptions } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, setDoc, addDoc } from 'firebase/firestore';
 import type { Student } from '@/types/student';
 
 const firebaseConfig: FirebaseOptions = {
@@ -67,4 +67,16 @@ export const getStudents = async (): Promise<Student[]> => {
   });
 
   return studentList;
+};
+
+export const addStudent = async (student: { name: string; major: string }): Promise<Student> => {
+  const studentData = {
+    ...student,
+    avatar: `avatar${Math.floor(Math.random() * 16) + 1}`,
+  };
+  const docRef = await addDoc(collection(db, 'students'), studentData);
+  return {
+    id: docRef.id,
+    ...studentData,
+  };
 };
