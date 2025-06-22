@@ -3,13 +3,13 @@ import { getFirestore, collection, getDocs, doc, setDoc, addDoc } from 'firebase
 import type { Student } from '@/types/student';
 
 const firebaseConfig: FirebaseOptions = {
-  apiKey: "AIzaSyAGjZCPF60rXXyZRVYgveARdycVVuQClO8",
-  authDomain: "teacher-student-report.firebaseapp.com",
-  projectId: "teacher-student-report",
-  storageBucket: "teacher-student-report.appspot.com",
-  messagingSenderId: "656795496800",
-  appId: "1:656795496800:web:c27f8d1254dfdcf6476e05",
-  measurementId: "G-FJ5CJLW874"
+  apiKey: "AIzaSyCrHTP46mpp3sKK8d67mv0hcUjuftsqlXI",
+  authDomain: "test-6f5b7.firebaseapp.com",
+  projectId: "test-6f5b7",
+  storageBucket: "test-6f5b7.firebasestorage.app",
+  messagingSenderId: "296078221097",
+  appId: "1:296078221097:web:06394da521064a12676138",
+  measurementId: "G-6HKDFDE8Z8"
 };
 
 const app = initializeApp(firebaseConfig);
