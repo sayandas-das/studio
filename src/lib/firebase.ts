@@ -15,45 +15,13 @@ const firebaseConfig: FirebaseOptions = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Seed database if it's empty
-const seedDatabase = async (): Promise<Student[]> => {
-  const studentsToSeed: Student[] = [
-    { id: 'S001', name: 'Alice Johnson', class: 'Grade 12', avatar: 'avatar1' },
-    { id: 'S002', name: 'Bob Williams', class: 'Grade 11', avatar: 'avatar2' },
-    { id: 'S003', name: 'Charlie Brown', class: 'Grade 10', avatar: 'avatar3' },
-    { id: 'S004', name: 'Diana Miller', class: 'Grade 12', avatar: 'avatar4' },
-    { id: 'S005', name: 'Ethan Davis', class: 'Grade 9', avatar: 'avatar5' },
-    { id: 'S006', name: 'Fiona Garcia', class: 'Grade 11', avatar: 'avatar6' },
-    { id: 'S007', name: 'George Rodriguez', class: 'Grade 10', avatar: 'avatar7' },
-    { id: 'S008', name: 'Hannah Wilson', class: 'Grade 12', avatar: 'avatar8' },
-    { id: 'S009', name: 'Ian Martinez', class: 'Grade 9', avatar: 'avatar9' },
-    { id: 'S010', name: 'Jane Anderson', class: 'Grade 11', avatar: 'avatar10' },
-    { id: 'S011', name: 'Kevin Thomas', class: 'Grade 10', avatar: 'avatar11' },
-    { id: 'S012', name: 'Laura Taylor', class: 'Grade 12', avatar: 'avatar12' },
-    { id: 'S013', name: 'Mason Hernandez', class: 'Grade 9', avatar: 'avatar13' },
-    { id: 'S014', name: 'Nora Moore', class: 'Grade 11', avatar: 'avatar14' },
-    { id: 'S015', name: 'Oscar Lee', class: 'Grade 10', avatar: 'avatar15' },
-    { id: 'S016', name: 'Penelope White', class: 'Grade 12', avatar: 'avatar16' },
-  ];
-
-  const writePromises = studentsToSeed.map(student => {
-    const { id, ...studentData } = student;
-    return setDoc(doc(db, "students", id), studentData);
-  });
-  
-  await Promise.all(writePromises);
-  
-  console.log("Database seeded with student data.");
-  return studentsToSeed;
-}
-
 export const getStudents = async (): Promise<Student[]> => {
   const studentsCol = collection(db, 'students');
   const studentSnapshot = await getDocs(studentsCol);
   
   if (studentSnapshot.empty) {
-    console.log("No students found, seeding database...");
-    return seedDatabase();
+    console.log("No students found.");
+    return [];
   }
 
   const studentList = studentSnapshot.docs.map(doc => {
