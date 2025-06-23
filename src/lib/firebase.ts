@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp, type FirebaseOptions } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, addDoc, deleteDoc, type Firestore } from 'firebase/firestore';
 import type { Student } from '@/types/student';
 
 const firebaseConfig: FirebaseOptions = {
@@ -12,10 +12,18 @@ const firebaseConfig: FirebaseOptions = {
   measurementId: "G-6HKDFDE8Z8"
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
+let db: Firestore;
+
+function getDb() {
+  if (!db) {
+    const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    db = getFirestore(app);
+  }
+  return db;
+}
 
 export const getStudents = async (): Promise<Student[]> => {
+  const db = getDb();
   const studentsCol = collection(db, 'students');
   const studentSnapshot = await getDocs(studentsCol);
   
@@ -38,6 +46,7 @@ export const getStudents = async (): Promise<Student[]> => {
 };
 
 export const addStudent = async (student: { name: string; class: string }): Promise<Student> => {
+  const db = getDb();
   const studentData = {
     ...student,
     avatar: `avatar${Math.floor(Math.random() * 16) + 1}`,
@@ -50,5 +59,6 @@ export const addStudent = async (student: { name: string; class: string }): Prom
 };
 
 export const deleteStudent = async (id: string): Promise<void> => {
+  const db = getDb();
   await deleteDoc(doc(db, "students", id));
 };
