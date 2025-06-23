@@ -1,4 +1,4 @@
-import { initializeApp, type FirebaseOptions } from 'firebase/app';
+import { initializeApp, getApps, getApp, type FirebaseOptions } from 'firebase/app';
 import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc } from 'firebase/firestore';
 import type { Student } from '@/types/student';
 
@@ -12,7 +12,7 @@ const firebaseConfig: FirebaseOptions = {
   measurementId: "G-6HKDFDE8Z8"
 };
 
-const app = initializeApp(firebaseConfig);
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
 
 export const getStudents = async (): Promise<Student[]> => {
