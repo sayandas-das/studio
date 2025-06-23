@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { getStudents, addStudent } from "@/lib/firebase"
+import { getStudents, addStudent, deleteStudent } from "@/lib/firebase"
 import type { Student } from "@/types/student"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -82,6 +82,29 @@ export default function Home() {
     }
   }
 
+  const handleDeleteStudent = async (id: string) => {
+    const studentToDelete = students.find(s => s.id === id);
+    if (!studentToDelete) return;
+
+    setStudents(prevStudents => prevStudents.filter(student => student.id !== id));
+
+    try {
+      await deleteStudent(id);
+      toast({
+        title: "Success!",
+        description: `Student "${studentToDelete.name}" was deleted.`
+      });
+    } catch (error) {
+      console.error("Failed to delete student:", error);
+      toast({
+        title: "Error",
+        description: `Could not delete ${studentToDelete.name}. Please try again.`,
+        variant: "destructive"
+      });
+      setStudents(students);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-20 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -140,7 +163,7 @@ export default function Home() {
         ) : filteredStudents.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in-50 duration-500">
             {filteredStudents.map(student => (
-              <StudentCard key={student.id} student={student} />
+              <StudentCard key={student.id} student={student} onDelete={handleDeleteStudent} />
             ))}
           </div>
         ) : (

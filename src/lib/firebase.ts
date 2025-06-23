@@ -1,5 +1,5 @@
 import { initializeApp, type FirebaseOptions } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, setDoc, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc } from 'firebase/firestore';
 import type { Student } from '@/types/student';
 
 const firebaseConfig: FirebaseOptions = {
@@ -47,4 +47,8 @@ export const addStudent = async (student: { name: string; class: string }): Prom
     id: docRef.id,
     ...studentData,
   };
+};
+
+export const deleteStudent = async (id: string): Promise<void> => {
+  await deleteDoc(doc(db, "students", id));
 };
