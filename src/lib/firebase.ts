@@ -18,22 +18,22 @@ const db = getFirestore(app);
 // Seed database if it's empty
 const seedDatabase = async (): Promise<Student[]> => {
   const studentsToSeed: Student[] = [
-    { id: 'S001', name: 'Alice Johnson', major: 'Computer Science', avatar: 'avatar1' },
-    { id: 'S002', name: 'Bob Williams', major: 'Physics', avatar: 'avatar2' },
-    { id: 'S003', name: 'Charlie Brown', major: 'Business Administration', avatar: 'avatar3' },
-    { id: 'S004', name: 'Diana Miller', major: 'Computer Science', avatar: 'avatar4' },
-    { id: 'S005', name: 'Ethan Davis', major: 'Mechanical Engineering', avatar: 'avatar5' },
-    { id: 'S006', name: 'Fiona Garcia', major: 'Biology', avatar: 'avatar6' },
-    { id: 'S007', name: 'George Rodriguez', major: 'Physics', avatar: 'avatar7' },
-    { id: 'S008', name: 'Hannah Wilson', major: 'Business Administration', avatar: 'avatar8' },
-    { id: 'S009', name: 'Ian Martinez', major: 'Computer Science', avatar: 'avatar9' },
-    { id: 'S010', name: 'Jane Anderson', major: 'Mechanical Engineering', avatar: 'avatar10' },
-    { id: 'S011', name: 'Kevin Thomas', major: 'Biology', avatar: 'avatar11' },
-    { id: 'S012', name: 'Laura Taylor', major: 'Computer Science', avatar: 'avatar12' },
-    { id: 'S013', name: 'Mason Hernandez', major: 'Physics', avatar: 'avatar13' },
-    { id: 'S014', name: 'Nora Moore', major: 'Business Administration', avatar: 'avatar14' },
-    { id: 'S015', name: 'Oscar Lee', major: 'Mechanical Engineering', avatar: 'avatar15' },
-    { id: 'S016', name: 'Penelope White', major: 'Biology', avatar: 'avatar16' },
+    { id: 'S001', name: 'Alice Johnson', class: 'Grade 12', avatar: 'avatar1' },
+    { id: 'S002', name: 'Bob Williams', class: 'Grade 11', avatar: 'avatar2' },
+    { id: 'S003', name: 'Charlie Brown', class: 'Grade 10', avatar: 'avatar3' },
+    { id: 'S004', name: 'Diana Miller', class: 'Grade 12', avatar: 'avatar4' },
+    { id: 'S005', name: 'Ethan Davis', class: 'Grade 9', avatar: 'avatar5' },
+    { id: 'S006', name: 'Fiona Garcia', class: 'Grade 11', avatar: 'avatar6' },
+    { id: 'S007', name: 'George Rodriguez', class: 'Grade 10', avatar: 'avatar7' },
+    { id: 'S008', name: 'Hannah Wilson', class: 'Grade 12', avatar: 'avatar8' },
+    { id: 'S009', name: 'Ian Martinez', class: 'Grade 9', avatar: 'avatar9' },
+    { id: 'S010', name: 'Jane Anderson', class: 'Grade 11', avatar: 'avatar10' },
+    { id: 'S011', name: 'Kevin Thomas', class: 'Grade 10', avatar: 'avatar11' },
+    { id: 'S012', name: 'Laura Taylor', class: 'Grade 12', avatar: 'avatar12' },
+    { id: 'S013', name: 'Mason Hernandez', class: 'Grade 9', avatar: 'avatar13' },
+    { id: 'S014', name: 'Nora Moore', class: 'Grade 11', avatar: 'avatar14' },
+    { id: 'S015', name: 'Oscar Lee', class: 'Grade 10', avatar: 'avatar15' },
+    { id: 'S016', name: 'Penelope White', class: 'Grade 12', avatar: 'avatar16' },
   ];
 
   const writePromises = studentsToSeed.map(student => {
@@ -61,7 +61,7 @@ export const getStudents = async (): Promise<Student[]> => {
     return {
       id: doc.id,
       name: data.name,
-      major: data.major,
+      class: data.class,
       avatar: data.avatar,
     } as Student;
   });
@@ -69,7 +69,7 @@ export const getStudents = async (): Promise<Student[]> => {
   return studentList;
 };
 
-export const addStudent = async (student: { name: string; major: string }): Promise<Student> => {
+export const addStudent = async (student: { name: string; class: string }): Promise<Student> => {
   const studentData = {
     ...student,
     avatar: `avatar${Math.floor(Math.random() * 16) + 1}`,

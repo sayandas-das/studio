@@ -16,7 +16,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [newName, setNewName] = useState("")
-  const [newMajor, setNewMajor] = useState("")
+  const [newClass, setNewClass] = useState("")
   const [isAdding, setIsAdding] = useState(false)
   const { toast } = useToast()
 
@@ -44,16 +44,17 @@ export default function Home() {
     return students
       .filter(student =>
         student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        student.id.toLowerCase().includes(searchQuery.toLowerCase())
+        student.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (student.class && student.class.toLowerCase().includes(searchQuery.toLowerCase()))
       )
   }, [students, searchQuery])
 
   const handleAddStudent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!newName.trim() || !newMajor.trim()) {
+    if (!newName.trim() || !newClass.trim()) {
         toast({
             title: "Missing Information",
-            description: "Please provide both a name and a major for the student.",
+            description: "Please provide both a name and a class for the student.",
             variant: "destructive"
         })
         return
@@ -61,10 +62,10 @@ export default function Home() {
 
     setIsAdding(true)
     try {
-        const newStudent = await addStudent({ name: newName, major: newMajor })
+        const newStudent = await addStudent({ name: newName, class: newClass })
         setStudents(prevStudents => [newStudent, ...prevStudents].sort((a,b) => a.name.localeCompare(b.name)))
         setNewName("")
-        setNewMajor("")
+        setNewClass("")
         toast({
             title: "Success!",
             description: `Student "${newName}" was added successfully.`
@@ -105,12 +106,12 @@ export default function Home() {
                             aria-label="New student name"
                         />
                         <Input
-                            placeholder="Major"
-                            value={newMajor}
-                            onChange={(e) => setNewMajor(e.target.value)}
+                            placeholder="Class"
+                            value={newClass}
+                            onChange={(e) => setNewClass(e.target.value)}
                             disabled={isAdding}
                             className="flex-1"
-                            aria-label="New student major"
+                            aria-label="New student class"
                         />
                         <Button type="submit" disabled={isAdding}>
                             {isAdding ? 'Adding...' : 'Add Student'}
@@ -122,7 +123,7 @@ export default function Home() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <Input
                       type="search"
-                      placeholder="Search by name or ID..."
+                      placeholder="Search by name, ID, or class..."
                       className="pl-10 h-10 w-full"
                       value={searchQuery}
                       onChange={e => setSearchQuery(e.target.value)}

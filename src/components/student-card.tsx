@@ -24,7 +24,7 @@ export function StudentCard({ student }: StudentCardProps) {
       <CardContent className="grid gap-3 text-sm flex-1">
         <div className="flex items-center gap-2 text-muted-foreground">
           <BookOpen className="h-4 w-4" />
-          <span className="text-foreground">{student.major}</span>
+          <span className="text-foreground">{student.class}</span>
         </div>
       </CardContent>
     </Card>
