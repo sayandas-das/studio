@@ -2,11 +2,8 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // This rule allows all reads and writes to your database for the next 30 days.
-    // It's useful for getting started, but it's insecure.
-    // Make sure to secure your database correctly before deploying to production.
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2025, 7, 26);
+    match /students/{studentId} {
+      allow read, write: if true;
     }
   }
 }
