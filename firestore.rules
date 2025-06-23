@@ -2,8 +2,7 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // This rule allows anyone to read and write to the students collection.
-    // For a production app, you would want to implement more secure rules.
+    // Allow read and write access to the students collection for development
     match /students/{studentId} {
       allow read, write: if true;
     }
