@@ -3,13 +3,13 @@ import { getFirestore, collection, getDocs, doc, addDoc, deleteDoc, type Firesto
 import type { Student } from '@/types/student';
 
 const firebaseConfig: FirebaseOptions = {
-  apiKey: "AIzaSyCrHTP46mpp3sKK8d67mv0hcUjuftsqlXI",
-  authDomain: "test-6f5b7.firebaseapp.com",
-  projectId: "test-6f5b7",
-  storageBucket: "test-6f5b7.firebasestorage.app",
-  messagingSenderId: "296078221097",
-  appId: "1:296078221097:web:06394da521064a12676138",
-  measurementId: "G-6HKDFDE8Z8"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 let db: Firestore;
